@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { Link } from "@tanstack/react-router"
 
 // This is sample data.
 const data = {
@@ -24,8 +25,8 @@ const data = {
       url: "#",
       items: [
         {
-          title: "Installation",
-          url: "#",
+          title: "数据表",
+          url: "/datatable",
         },
         {
           title: "Project Structure",
@@ -166,9 +167,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
-                      <a href={item.url}>{item.title}</a>
-                    </SidebarMenuButton>
+                    <Link to={item.url}>
+                      {({ isActive }) => {
+                        return (
+                          <SidebarMenuButton isActive={isActive}>
+                            {item.title}
+                          </SidebarMenuButton>
+                        )
+                      }}
+                    </Link>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>

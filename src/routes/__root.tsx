@@ -1,56 +1,35 @@
-import * as React from "react"
+import React, { Suspense } from "react"
 import { Outlet, createRootRoute } from "@tanstack/react-router"
-import { TanStackRouterDevtools } from "@tanstack/router-devtools"
-import { AppSidebar } from "@/components/app-sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
+
+const loadDevtools = () =>
+  Promise.all([
+    import("@tanstack/router-devtools"),
+    import("@tanstack/react-query-devtools"),
+  ]).then(([routerDevtools, reactQueryDevtools]) => {
+    return {
+      default: () => (
+        <>
+          <routerDevtools.TanStackRouterDevtools />
+          <reactQueryDevtools.ReactQueryDevtools />
+        </>
+      ),
+    }
+  })
+const TanStackDevtools =
+  process.env.NODE_ENV === "production" ? () => null : React.lazy(loadDevtools)
 
 export const Route = createRootRoute({
   component: RootComponent,
+  notFoundComponent: () => <div>404 Not Found</div>,
 })
 
 function RootComponent() {
   return (
-    <React.Fragment>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
-            />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </header>
-          <Outlet />
-        </SidebarInset>
-      </SidebarProvider>
-      <TanStackRouterDevtools />
-    </React.Fragment>
+    <>
+      <Outlet />
+      <Suspense>
+        <TanStackDevtools />
+      </Suspense>
+    </>
   )
 }
