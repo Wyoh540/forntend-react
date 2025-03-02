@@ -7,6 +7,8 @@ import { getItemsOptions } from "@/client/@tanstack/react-query.gen"
 import { DataTable } from "./-components/data-table"
 import { DataTablePagination } from "./-components/data-table-pagination"
 import { columns } from "./-components/columns"
+import { AddItem } from "./-components/add-data"
+
 export const Route = createFileRoute("/_layout/datatable/")({
   component: RouteComponent,
 })
@@ -37,7 +39,7 @@ function RouteComponent() {
   return (
     <div className="flex flex-col gap-2">
       <div>
-        <Button>新增</Button>
+        <AddItem />
       </div>
       <DataTable data={items} columns={columns}></DataTable>
       <DataTablePagination
