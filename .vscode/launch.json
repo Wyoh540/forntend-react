@@ -9,12 +9,6 @@
       "name": "Run Yarn start",
       "request": "launch",
       "type": "node-terminal"
-    },
-    {
-      "command": "generate-client",
-      "name": "更新客户端",
-      "request": "launch",
-      "type": "node-terminal"
     }
   ]
 }

@@ -12,10 +12,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { Link } from "@tanstack/react-router"
-
+import { NavUser } from "@/components/nav-user"
+import useAuth from "@/hooks/use-auth"
 // This is sample data.
 const data = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
@@ -146,9 +148,16 @@ const data = {
       ],
     },
   ],
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user: currentUser } = useAuth()
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -183,6 +192,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         ))}
       </SidebarContent>
+      {currentUser && (
+        <SidebarFooter>
+          <NavUser user={currentUser} />
+        </SidebarFooter>
+      )}
       <SidebarRail />
     </Sidebar>
   )

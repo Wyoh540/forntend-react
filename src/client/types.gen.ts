@@ -146,6 +146,22 @@ export type CreateUserResponses = {
 
 export type CreateUserResponse = CreateUserResponses[keyof CreateUserResponses];
 
+export type GetUserMeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/users/me';
+};
+
+export type GetUserMeResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserPubic;
+};
+
+export type GetUserMeResponse = GetUserMeResponses[keyof GetUserMeResponses];
+
 export type GetItemsData = {
     body?: never;
     path?: never;

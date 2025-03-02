@@ -6,7 +6,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import "./styles.css"
 import reportWebVitals from "./reportWebVitals.ts"
 import { routeTree } from "./routeTree.gen.ts"
+import { client } from "@/client/client.gen.ts"
 
+// 请求拦截器
+client.setConfig({
+  headers: {
+    Authorization: "Bearer " + localStorage.getItem("access_token") || "",
+  },
+})
 const router = createRouter({
   routeTree,
   defaultPreload: "intent",

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { Outlet } from "@tanstack/react-router"
+import { Outlet, redirect } from "@tanstack/react-router"
 import { AppSidebar } from "@/components/app-sidebar"
 import {
   Breadcrumb,
@@ -15,9 +15,17 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { isLoggedIn } from "@/hooks/use-auth"
 
 export const Route = createFileRoute("/_layout")({
   component: Layout,
+  beforeLoad: async () => {
+    if (!isLoggedIn()) {
+      throw redirect({
+        to: "/login",
+      })
+    }
+  },
 })
 
 function Layout() {
@@ -45,7 +53,9 @@ function Layout() {
             </BreadcrumbList>
           </Breadcrumb>
         </header>
-        <Outlet />
+        <div className="flex flex-col gap-2 p-2">
+          <Outlet />
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

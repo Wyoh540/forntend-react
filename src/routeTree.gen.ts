@@ -11,12 +11,19 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
 import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
 import { Route as LayoutAboutImport } from './routes/_layout/about'
 import { Route as LayoutDatatableIndexImport } from './routes/_layout/datatable/index'
 
 // Create/Update Routes
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const LayoutRoute = LayoutImport.update({
   id: '/_layout',
@@ -50,6 +57,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof LayoutImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
     '/_layout/about': {
@@ -95,12 +109,14 @@ const LayoutRouteWithChildren =
 
 export interface FileRoutesByFullPath {
   '': typeof LayoutRouteWithChildren
+  '/login': typeof LoginRoute
   '/about': typeof LayoutAboutRoute
   '/': typeof LayoutIndexRoute
   '/datatable': typeof LayoutDatatableIndexRoute
 }
 
 export interface FileRoutesByTo {
+  '/login': typeof LoginRoute
   '/about': typeof LayoutAboutRoute
   '/': typeof LayoutIndexRoute
   '/datatable': typeof LayoutDatatableIndexRoute
@@ -109,6 +125,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_layout': typeof LayoutRouteWithChildren
+  '/login': typeof LoginRoute
   '/_layout/about': typeof LayoutAboutRoute
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/datatable/': typeof LayoutDatatableIndexRoute
@@ -116,12 +133,13 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/about' | '/' | '/datatable'
+  fullPaths: '' | '/login' | '/about' | '/' | '/datatable'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/' | '/datatable'
+  to: '/login' | '/about' | '/' | '/datatable'
   id:
     | '__root__'
     | '/_layout'
+    | '/login'
     | '/_layout/about'
     | '/_layout/'
     | '/_layout/datatable/'
@@ -130,10 +148,12 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   LayoutRoute: typeof LayoutRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   LayoutRoute: LayoutRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 
 export const routeTree = rootRoute
@@ -146,7 +166,8 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/_layout"
+        "/_layout",
+        "/login"
       ]
     },
     "/_layout": {
@@ -156,6 +177,9 @@ export const routeTree = rootRoute
         "/_layout/",
         "/_layout/datatable/"
       ]
+    },
+    "/login": {
+      "filePath": "login.tsx"
     },
     "/_layout/about": {
       "filePath": "_layout/about.tsx",
