@@ -10,15 +10,13 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form"
 import { type BodyLoginAccessToken as AccessToken } from "@/client"
 import { Input } from "@/components/ui/input"
-import useAuth, { isLoggedIn } from "@/hooks/use-auth"
+import useAuth from "@/hooks/use-auth"
 import { useForm, type SubmitHandler } from "react-hook-form"
 
 export function LoginForm({

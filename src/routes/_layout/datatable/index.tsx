@@ -19,7 +19,7 @@ function RouteComponent() {
 
   const { data, isLoading } = useQuery({
     ...getItemsOptions({
-      query: { page: page },
+      query: { page: page, size: size },
     }),
   })
 

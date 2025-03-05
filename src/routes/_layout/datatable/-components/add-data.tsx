@@ -1,5 +1,11 @@
 import { useState } from "react"
-import { useForm, type SubmitHandler } from "react-hook-form"
+import {
+  useForm,
+  type ControllerRenderProps,
+  type SubmitHandler,
+} from "react-hook-form"
+import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
 
 import type { ItemCreate } from "@/client"
 import { Button } from "@/components/ui/button"
@@ -21,32 +27,41 @@ import {
 } from "@/components/ui/form"
 import { MultiSelect } from "@/components/multi-select"
 import { Input } from "@/components/ui/input"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  getItemTagsOptions,
+  createItemMutation,
+  getItemsQueryKey,
+} from "@/client/@tanstack/react-query.gen"
 
-const tagList = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-]
+// Tag选择框
+function TagSelect({
+  field,
+}: {
+  field: ControllerRenderProps<ItemCreate, "tags">
+}) {
+  const { data: tags } = useQuery({ ...getItemTagsOptions() })
+
+  const tagList =
+    tags?.map((tag) => ({ value: tag.name, label: tag.name })) || []
+
+  return (
+    <MultiSelect
+      options={tagList}
+      onValueChange={field.onChange}
+      defaultValue={field.value}
+      placeholder="Select options"
+      variant="inverted"
+      animation={2}
+      maxCount={3}
+    />
+  )
+}
 
 export function AddItem() {
   const [open, setOpen] = useState(false)
+
+  const queryClient = useQueryClient()
 
   const form = useForm<ItemCreate>({
     defaultValues: {
@@ -55,8 +70,26 @@ export function AddItem() {
     },
   })
 
+  const mutation = useMutation({
+    ...createItemMutation(),
+    onSuccess: () => {
+      // 成功后回调
+      form.reset()
+      setOpen(false)
+      toast.success("请求成功")
+    },
+    onError: (err) => {
+      // 失败后回调
+      console.log(err)
+    },
+    onSettled: () => {
+      // 执行完回调，使 items 数据无效，重新拉取
+      queryClient.invalidateQueries({ queryKey: getItemsQueryKey() })
+    },
+  })
+
   const onSubmit: SubmitHandler<ItemCreate> = async (data) => {
-    console.log(data)
+    await mutation.mutateAsync({ body: data })
   }
 
   return (
@@ -92,21 +125,20 @@ export function AddItem() {
                   <FormItem>
                     <FormLabel>标签</FormLabel>
                     <FormControl>
-                      <MultiSelect
-                        options={tagList}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        placeholder="Select options"
-                        variant="inverted"
-                        animation={2}
-                        maxCount={3}
-                      />
+                      <TagSelect field={field} />
                     </FormControl>
                   </FormItem>
                 )}
               />
               <DialogFooter>
-                <Button variant="default" type="submit">
+                <Button
+                  variant="default"
+                  type="submit"
+                  disabled={form.formState.isSubmitting}
+                >
+                  {form.formState.isSubmitting && (
+                    <Loader2 className="animate-spin" />
+                  )}
                   保存
                 </Button>
               </DialogFooter>

@@ -38,13 +38,12 @@ export type PageItemPublic = {
     pages?: number | null;
 };
 
+/**
+ * 标签表
+ */
 export type Tag = {
-    id: number;
+    id?: number | null;
     name: string;
-};
-
-export type TagList = {
-    data?: Array<Tag>;
 };
 
 export type TagName = string;
@@ -259,7 +258,7 @@ export type GetItemTagsResponses = {
     /**
      * Successful Response
      */
-    200: TagList;
+    200: Array<Tag>;
 };
 
 export type GetItemTagsResponse = GetItemTagsResponses[keyof GetItemTagsResponses];

@@ -4,6 +4,7 @@ import { RouterProvider, createRouter } from "@tanstack/react-router"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import "./styles.css"
+import { Toaster } from "@/components/ui/sonner.tsx"
 import reportWebVitals from "./reportWebVitals.ts"
 import { routeTree } from "./routeTree.gen.ts"
 import { client } from "@/client/client.gen.ts"
@@ -36,6 +37,7 @@ if (!rootElement.innerHTML) {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+        <Toaster position="top-center" richColors />
       </QueryClientProvider>
     </StrictMode>,
   )
