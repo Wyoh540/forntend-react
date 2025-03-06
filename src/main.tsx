@@ -10,11 +10,27 @@ import { routeTree } from "./routeTree.gen.ts"
 import { client } from "@/client/client.gen.ts"
 
 // 请求拦截器
-client.setConfig({
-  headers: {
+client.instance.interceptors.request.use((config) => {
+  config.headers.set({
     Authorization: "Bearer " + localStorage.getItem("access_token") || "",
-  },
+  })
+  return config
 })
+
+// 响应拦截器
+client.instance.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    if (error.status === 403) {
+      localStorage.removeItem("access_token")
+      window.location.href = "/login"
+    }
+    return Promise.reject(error)
+  },
+)
+
 const router = createRouter({
   routeTree,
   defaultPreload: "intent",
