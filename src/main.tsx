@@ -2,6 +2,7 @@ import { StrictMode } from "react"
 import ReactDOM from "react-dom/client"
 import { RouterProvider, createRouter } from "@tanstack/react-router"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 import "./styles.css"
 import { Toaster } from "@/components/ui/sonner.tsx"
@@ -24,6 +25,7 @@ client.instance.interceptors.response.use(
   },
   (error) => {
     if (error.status === 403) {
+      toast.error("登录失效")
       localStorage.removeItem("access_token")
       window.location.href = "/login"
     }

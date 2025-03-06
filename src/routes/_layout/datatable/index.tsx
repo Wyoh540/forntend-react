@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 
-import { Button } from "@/components/ui/button"
 import { getItemsOptions } from "@/client/@tanstack/react-query.gen"
 import { DataTable } from "./-components/data-table"
 import { DataTablePagination } from "./-components/data-table-pagination"

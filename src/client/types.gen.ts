@@ -195,33 +195,6 @@ export type GetItemsResponses = {
 
 export type GetItemsResponse = GetItemsResponses[keyof GetItemsResponses];
 
-export type UpdateItemData = {
-    body: ItemUpdate;
-    path?: never;
-    query: {
-        item_id: number;
-    };
-    url: '/api/v1/items/';
-};
-
-export type UpdateItemErrors = {
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type UpdateItemError = UpdateItemErrors[keyof UpdateItemErrors];
-
-export type UpdateItemResponses = {
-    /**
-     * Successful Response
-     */
-    200: ItemPublic;
-};
-
-export type UpdateItemResponse = UpdateItemResponses[keyof UpdateItemResponses];
-
 export type CreateItemData = {
     body: ItemCreate;
     path?: never;
@@ -246,6 +219,60 @@ export type CreateItemResponses = {
 };
 
 export type CreateItemResponse = CreateItemResponses[keyof CreateItemResponses];
+
+export type DeleteItemData = {
+    body?: never;
+    path: {
+        item_id: number;
+    };
+    query?: never;
+    url: '/api/v1/items/{item_id}';
+};
+
+export type DeleteItemErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type DeleteItemError = DeleteItemErrors[keyof DeleteItemErrors];
+
+export type DeleteItemResponses = {
+    /**
+     * Successful Response
+     */
+    200: ItemPublic;
+};
+
+export type DeleteItemResponse = DeleteItemResponses[keyof DeleteItemResponses];
+
+export type UpdateItemData = {
+    body: ItemUpdate;
+    path: {
+        item_id: number;
+    };
+    query?: never;
+    url: '/api/v1/items/{item_id}';
+};
+
+export type UpdateItemErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type UpdateItemError = UpdateItemErrors[keyof UpdateItemErrors];
+
+export type UpdateItemResponses = {
+    /**
+     * Successful Response
+     */
+    200: ItemPublic;
+};
+
+export type UpdateItemResponse = UpdateItemResponses[keyof UpdateItemResponses];
 
 export type GetItemTagsData = {
     body?: never;
