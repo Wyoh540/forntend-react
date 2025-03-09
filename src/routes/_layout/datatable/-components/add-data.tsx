@@ -117,7 +117,7 @@ export function AddItem() {
                     </FormControl>
                   </FormItem>
                 )}
-              ></FormField>
+              />
               <FormField
                 control={form.control}
                 name="tags"

@@ -64,7 +64,7 @@ export function DataTablePagination({
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() => onChange(0, pageSize)}
+            onClick={() => onChange(1, pageSize)}
             disabled={!(page !== 1)}
           >
             <span className="sr-only">Go to first page</span>

@@ -28,6 +28,7 @@ export type ItemPublic = {
 
 export type ItemUpdate = {
     title?: string | null;
+    tags?: Array<string>;
 };
 
 export type PageItemPublic = {

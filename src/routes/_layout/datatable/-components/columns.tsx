@@ -1,5 +1,6 @@
 import { type ColumnDef } from "@tanstack/react-table"
 import { type ItemPublic } from "@/client"
+import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +15,7 @@ import {
   deleteItemMutation,
   getItemsQueryKey,
 } from "@/client/@tanstack/react-query.gen"
+import { EditItem } from "./edit-data"
 import { toast } from "sonner"
 
 export const columns: ColumnDef<ItemPublic>[] = [
@@ -28,6 +30,14 @@ export const columns: ColumnDef<ItemPublic>[] = [
   {
     accessorKey: "tags",
     header: "Tags",
+    cell: ({ row }) => {
+      const tags = row.original.tags
+      return tags.map((tag, index) => (
+        <Badge key={index} variant="outline">
+          {tag}
+        </Badge>
+      ))
+    },
   },
   {
     accessorKey: "owner.full_name",
@@ -57,7 +67,7 @@ export const columns: ColumnDef<ItemPublic>[] = [
       })
 
       return (
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <MoreHorizontal />
@@ -65,6 +75,7 @@ export const columns: ColumnDef<ItemPublic>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <EditItem item={item} />
             <DropdownMenuItem
               onClick={async () =>
                 await mutation.mutateAsync({ path: { item_id: item.id } })
