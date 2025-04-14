@@ -84,7 +84,9 @@ export function AddItem() {
     },
     onSettled: () => {
       // 执行完回调，使 items 数据无效，重新拉取
-      queryClient.invalidateQueries({ queryKey: getItemsQueryKey() })
+      queryClient.invalidateQueries({
+        queryKey: getItemsQueryKey({ query: { status: 1 } }),
+      })
     },
   })
 

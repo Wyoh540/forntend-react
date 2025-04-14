@@ -12,14 +12,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { Loader2 } from "lucide-react"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  isPending: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isPending = false,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     columns,
@@ -51,7 +55,18 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isPending ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  <Button disabled variant="ghost">
+                    <Loader2 className="animate-spin" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}

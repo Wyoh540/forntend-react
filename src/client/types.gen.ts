@@ -15,19 +15,30 @@ export type HttpValidationError = {
 
 export type ItemCreate = {
     title: string;
+    /**
+     * 1: 在线, 2: 离线
+     */
+    status?: StatusEnum;
     tags?: Array<string>;
 };
 
 export type ItemPublic = {
     title: string;
+    /**
+     * 1: 在线, 2: 离线
+     */
+    status?: StatusEnum;
     id: number;
-    owner_id: number;
     owner: UserPubic;
     tags: Array<TagName>;
 };
 
 export type ItemUpdate = {
     title?: string | null;
+    /**
+     * 1: 在线, 2: 离线
+     */
+    status?: StatusEnum;
     tags?: Array<string>;
 };
 
@@ -38,6 +49,8 @@ export type PageItemPublic = {
     size: number | null;
     pages?: number | null;
 };
+
+export type StatusEnum = 1 | 2;
 
 /**
  * 标签表
@@ -165,7 +178,11 @@ export type GetUserMeResponse = GetUserMeResponses[keyof GetUserMeResponses];
 export type GetItemsData = {
     body?: never;
     path?: never;
-    query?: {
+    query: {
+        /**
+         * 按状态过滤
+         */
+        status: StatusEnum;
         /**
          * Page number
          */

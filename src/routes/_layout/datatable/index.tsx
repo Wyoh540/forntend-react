@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
 import { getItemsOptions } from "@/client/@tanstack/react-query.gen"
 import { DataTable } from "./-components/data-table"
@@ -16,37 +16,32 @@ function RouteComponent() {
   const [page, setPage] = useState(1)
   const [size, setSize] = useState(10)
 
-  const { data, isLoading } = useQuery({
+  const { data, isPending } = useQuery({
     ...getItemsOptions({
-      query: { page: page, size: size },
+      query: { page: page, size: size, status: 1 },
     }),
+    placeholderData: keepPreviousData,
   })
-
-  if (isLoading) {
-    return <div>loading....</div>
-  }
-  // console.log(data)
-  const items = data?.items ?? []
-  const total = data?.total ?? 0
-  const pages = data?.pages ?? 0
-
-  const onChange = (page: number, pageSize: number) => {
-    setPage(page)
-    setSize(pageSize)
-  }
 
   return (
     <div className="flex flex-col gap-2">
       <div>
         <AddItem />
       </div>
-      <DataTable data={items} columns={columns}></DataTable>
+      <DataTable
+        data={data?.items || []}
+        columns={columns}
+        isPending={isPending}
+      ></DataTable>
       <DataTablePagination
         page={page}
         pageSize={size}
-        total={total}
-        pages={pages}
-        onChange={onChange}
+        total={data?.total || 0}
+        pages={data?.pages || 0}
+        onChange={(page, pageSize) => {
+          setPage(page)
+          setSize(pageSize)
+        }}
       />
     </div>
   )

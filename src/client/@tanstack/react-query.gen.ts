@@ -133,9 +133,9 @@ export const getUserMeOptions = (options?: Options<GetUserMeData>) => {
     });
 };
 
-export const getItemsQueryKey = (options?: Options<GetItemsData>) => createQueryKey('getItems', options);
+export const getItemsQueryKey = (options: Options<GetItemsData>) => createQueryKey('getItems', options);
 
-export const getItemsOptions = (options?: Options<GetItemsData>) => {
+export const getItemsOptions = (options: Options<GetItemsData>) => {
     return queryOptions({
         queryFn: async ({ queryKey, signal }) => {
             const { data } = await getItems({
@@ -179,9 +179,9 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
     return params as unknown as typeof page;
 };
 
-export const getItemsInfiniteQueryKey = (options?: Options<GetItemsData>): QueryKey<Options<GetItemsData>> => createQueryKey('getItems', options, true);
+export const getItemsInfiniteQueryKey = (options: Options<GetItemsData>): QueryKey<Options<GetItemsData>> => createQueryKey('getItems', options, true);
 
-export const getItemsInfiniteOptions = (options?: Options<GetItemsData>) => {
+export const getItemsInfiniteOptions = (options: Options<GetItemsData>) => {
     return infiniteQueryOptions<GetItemsResponse, AxiosError<GetItemsError>, InfiniteData<GetItemsResponse>, QueryKey<Options<GetItemsData>>, number | Pick<QueryKey<Options<GetItemsData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
     // @ts-ignore
     {

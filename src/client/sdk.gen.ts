@@ -76,8 +76,8 @@ export const getUserMe = <ThrowOnError extends boolean = false>(options?: Option
 /**
  * Get Items
  */
-export const getItems = <ThrowOnError extends boolean = false>(options?: Options<GetItemsData, ThrowOnError>) => {
-    return (options?.client ?? _heyApiClient).get<GetItemsResponse, GetItemsError, ThrowOnError>({
+export const getItems = <ThrowOnError extends boolean = false>(options: Options<GetItemsData, ThrowOnError>) => {
+    return (options.client ?? _heyApiClient).get<GetItemsResponse, GetItemsError, ThrowOnError>({
         url: '/api/v1/items/',
         ...options
     });
