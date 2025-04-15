@@ -9,6 +9,13 @@
       "name": "Run Yarn start",
       "request": "launch",
       "type": "node-terminal"
+    },
+    {
+      "type": "vscode-edge-devtools.debug",
+      "request": "launch",
+      "name": "Debug Frontent: Launch Chrome against http://localhost:3000",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
     }
   ]
 }

@@ -178,11 +178,16 @@ export type GetUserMeResponse = GetUserMeResponses[keyof GetUserMeResponses];
 export type GetItemsData = {
     body?: never;
     path?: never;
-    query: {
+    query?: {
         /**
-         * 按状态过滤
+         * 多个字段使用`,`隔开，字段前`-`表示降序， 例如 `-id` 表示降序
          */
-        status: StatusEnum;
+        order_by?: string | null;
+        /**
+         * 1: 在线， 2: 离线
+         */
+        status?: StatusEnum | null;
+        title__like?: string | null;
         /**
          * Page number
          */
