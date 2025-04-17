@@ -7,7 +7,7 @@ import {
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 
-import type { ItemCreate } from "@/client"
+import type { ItemCreate, StatusEnum } from "@/client"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -33,6 +33,15 @@ import {
   createItemMutation,
   getItemsQueryKey,
 } from "@/client/@tanstack/react-query.gen"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 // Tag选择框
 function TagSelect({
@@ -52,11 +61,16 @@ function TagSelect({
       defaultValue={field.value}
       placeholder="Select options"
       variant="inverted"
-      animation={2}
       maxCount={3}
     />
   )
 }
+
+const formSchema = z.object({
+  title: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  status: z.number().optional(),
+  tags: z.array(z.string()).optional(),
+})
 
 export function AddItem() {
   const [open, setOpen] = useState(false)
@@ -64,10 +78,8 @@ export function AddItem() {
   const queryClient = useQueryClient()
 
   const form = useForm<ItemCreate>({
-    defaultValues: {
-      title: "",
-      tags: [],
-    },
+    resolver: zodResolver(formSchema),
+    defaultValues: { tags: [], status: 1 },
   })
 
   const mutation = useMutation({
@@ -95,17 +107,20 @@ export function AddItem() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open)
+        form.reset()
+      }}
+    >
       <DialogTrigger asChild>
         <Button>新增</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
+          <DialogTitle>新增数据</DialogTitle>
+          <DialogDescription>这个表单新增数据</DialogDescription>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
@@ -117,6 +132,31 @@ export function AddItem() {
                     <FormControl>
                       <Input placeholder="title" {...field} />
                     </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>状态</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(Number(value))
+                      }}
+                      defaultValue={field.value?.toString()}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="1">在线</SelectItem>
+                        <SelectItem value="2">离线</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormItem>
                 )}
               />

@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table"
-import { type ItemPublic } from "@/client"
+import { type ItemPublic, type StatusEnum } from "@/client"
 import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
@@ -18,6 +18,25 @@ import {
 import { EditItem } from "./edit-data"
 import { toast } from "sonner"
 
+// 状态Badge 组件
+function StatusBadge({ status }: { status: StatusEnum }) {
+  const statusMap: Record<StatusEnum, { label: string; className: string }> = {
+    1: {
+      label: "在线",
+      className: "bg-green-100 text-green-800",
+    },
+    2: {
+      label: "离线",
+      className: "bg-red-100 text-red-800",
+    },
+  }
+  return (
+    <Badge variant="outline" className={statusMap[status].className}>
+      {statusMap[status].label}
+    </Badge>
+  )
+}
+
 export const columns: ColumnDef<ItemPublic>[] = [
   {
     accessorKey: "id",
@@ -28,15 +47,24 @@ export const columns: ColumnDef<ItemPublic>[] = [
     header: "Title",
   },
   {
+    header: "status",
+    accessorKey: "status",
+    cell: ({ row }) => {
+      return <StatusBadge status={row.getValue("status")} />
+    },
+  },
+  {
     accessorKey: "tags",
     header: "Tags",
     cell: ({ row }) => {
       const tags = row.original.tags
-      return tags.map((tag, index) => (
-        <Badge key={index} variant="outline">
-          {tag}
-        </Badge>
-      ))
+      return (
+        <div className="flex flex-row gap-1">
+          {tags.map((tag, index) => (
+            <Badge key={index}>{tag}</Badge>
+          ))}
+        </div>
+      )
     },
   },
   {

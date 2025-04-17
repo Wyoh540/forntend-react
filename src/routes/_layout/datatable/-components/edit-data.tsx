@@ -33,6 +33,13 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 function TagSelect({
   field,
@@ -51,7 +58,6 @@ function TagSelect({
       defaultValue={field.value}
       placeholder="Select options"
       variant="inverted"
-      animation={2}
       maxCount={3}
     />
   )
@@ -61,10 +67,7 @@ export function EditItem({ item }: { item: ItemPublic }) {
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
   const form = useForm<ItemUpdate>({
-    defaultValues: {
-      title: item.title,
-      tags: item.tags,
-    },
+    defaultValues: item,
   })
 
   const mutation = useMutation({
@@ -87,7 +90,13 @@ export function EditItem({ item }: { item: ItemPublic }) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open)
+        form.reset()
+      }}
+    >
       <DialogTrigger asChild>
         <DropdownMenuItem
           onSelect={(e) => {
@@ -116,6 +125,31 @@ export function EditItem({ item }: { item: ItemPublic }) {
                       value={item.title || ""}
                     />
                   </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>状态</FormLabel>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(Number(value))
+                    }}
+                    defaultValue={field.value?.toString()}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="1">在线</SelectItem>
+                      <SelectItem value="2">离线</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormItem>
               )}
             />

@@ -18,7 +18,7 @@ function RouteComponent() {
 
   const { data, isPending } = useQuery({
     ...getItemsOptions({
-      query: { page: page, size: size, status: 1 },
+      query: { page: page, size: size },
     }),
     placeholderData: keepPreviousData,
   })
