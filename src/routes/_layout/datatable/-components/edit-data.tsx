@@ -67,7 +67,7 @@ export function EditItem({ item }: { item: ItemPublic }) {
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
   const form = useForm<ItemUpdate>({
-    defaultValues: item,
+    values: item,
   })
 
   const mutation = useMutation({

@@ -7,7 +7,8 @@ import {
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 
-import type { ItemCreate, StatusEnum } from "@/client"
+import type { ItemCreate } from "@/client"
+
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -68,7 +69,7 @@ function TagSelect({
 
 const formSchema = z.object({
   title: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  status: z.number().optional(),
+  status: z.union([z.literal(1), z.literal(2)]).optional(),
   tags: z.array(z.string()).optional(),
 })
 
