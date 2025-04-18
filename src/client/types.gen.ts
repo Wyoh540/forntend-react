@@ -50,7 +50,10 @@ export type PageItemPublic = {
     pages?: number | null;
 };
 
-export type StatusEnum = 1 | 2;
+export enum StatusEnum {
+    _1 = 1,
+    _2 = 2
+}
 
 /**
  * 标签表

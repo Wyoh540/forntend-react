@@ -6,6 +6,10 @@ export default {
   plugins: [
     ...defaultPlugins,
     '@hey-api/client-axios',
-    '@tanstack/react-query'
+    '@tanstack/react-query',
+    {
+      enums: 'typescript', 
+      name: '@hey-api/typescript',
+    },
   ], 
 };
