@@ -31,6 +31,10 @@ const data = {
           url: "/datatable",
         },
         {
+          title: "文件上传",
+          url: "/file",
+        },
+        {
           title: "Project Structure",
           url: "#",
         },
