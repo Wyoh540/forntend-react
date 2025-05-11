@@ -43,6 +43,12 @@ import { z } from "zod"
 
 export const Route = createFileRoute("/_layout/file")({
   component: RouteComponent,
+  staticData: {
+    breadcrumb: {
+      title: "文件上传",
+      display: true,
+    },
+  },
 })
 
 // 文件直接上传

@@ -3,6 +3,11 @@ import * as React from "react"
 import { SearchForm } from "@/components/search-form"
 import { VersionSwitcher } from "@/components/version-switcher"
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -14,20 +19,25 @@ import {
   SidebarMenuItem,
   SidebarFooter,
   SidebarRail,
+  SidebarMenuSub,
 } from "@/components/ui/sidebar"
 import { Link } from "@tanstack/react-router"
 import { NavUser } from "@/components/nav-user"
 import useAuth from "@/hooks/use-auth"
+import { NavMain } from "@/components/nav-main"
+import { ChevronRight, Folder, SquareTerminal } from "lucide-react"
+
 // This is sample data.
-const data = {
+export const data = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
       title: "Getting Started",
       url: "#",
-      items: [
+      children: [
         {
           title: "数据表",
+          icon: SquareTerminal,
           url: "/datatable",
         },
         {
@@ -35,122 +45,27 @@ const data = {
           url: "/file",
         },
         {
-          title: "Project Structure",
-          url: "#",
+          title: "关于",
+          url: "/about",
         },
       ],
     },
-    {
-      title: "Building Your Application",
-      url: "#",
-      items: [
-        {
-          title: "Routing",
-          url: "#",
-        },
-        {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
-        },
-        {
-          title: "Rendering",
-          url: "#",
-        },
-        {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "API Reference",
-      url: "#",
-      items: [
-        {
-          title: "Components",
-          url: "#",
-        },
-        {
-          title: "File Conventions",
-          url: "#",
-        },
-        {
-          title: "Functions",
-          url: "#",
-        },
-        {
-          title: "next.config.js Options",
-          url: "#",
-        },
-        {
-          title: "CLI",
-          url: "#",
-        },
-        {
-          title: "Edge Runtime",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Architecture",
-      url: "#",
-      items: [
-        {
-          title: "Accessibility",
-          url: "#",
-        },
-        {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
-        },
-      ],
-    },
+    // {
+    //   title: "菜单",
+    //   url: "#",
+    //   items: [
+    //     {
+    //       title: "一级菜单",
+    //       url: "/menu",
+    //       items: [
+    //         {
+    //           title: "二级菜单",
+    //           url: "/menu/submenu",
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // },
   ],
   user: {
     name: "shadcn",
@@ -173,28 +88,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {item.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <Link to={item.url}>
-                      {({ isActive }) => {
-                        return (
-                          <SidebarMenuButton isActive={isActive}>
-                            {item.title}
-                          </SidebarMenuButton>
-                        )
-                      }}
-                    </Link>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+        <NavMain items={data.navMain} />
       </SidebarContent>
       {currentUser && (
         <SidebarFooter>
@@ -205,3 +99,40 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
+
+// function Tree({ item }: { item: any[] }) {
+//   const [subItem, ...items] = Array.isArray(item) ? item : [item]
+//   if (!items.length) {
+//     return (
+//       <Link to={item.url}>
+//         {({ isActive }) => {
+//           return (
+//             <SidebarMenuButton isActive={isActive}>
+//               {item.title}
+//             </SidebarMenuButton>
+//           )
+//         }}
+//       </Link>
+//     )
+//   }
+//   return (
+//     <SidebarMenuItem>
+//       <Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90">
+//         <CollapsibleTrigger asChild>
+//           <SidebarMenuButton>
+//             <ChevronRight className="transition-transform" />
+//             <Folder />
+//             {item.title}
+//           </SidebarMenuButton>
+//         </CollapsibleTrigger>
+//         <CollapsibleContent>
+//           <SidebarMenuSub>
+//             {item.children.map((subItem, index) => (
+//               <Tree key={index} item={subItem} />
+//             ))}
+//           </SidebarMenuSub>
+//         </CollapsibleContent>
+//       </Collapsible>
+//     </SidebarMenuItem>
+//   )
+// }

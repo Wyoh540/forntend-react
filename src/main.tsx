@@ -44,6 +44,15 @@ declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router
   }
+
+  // 静态数据，用于生成面包屑
+  interface StaticDataRouteOption {
+    // 面包屑静态数据
+    breadcrumb?: {
+      title: string // 面包屑标题
+      display: boolean // 是否展示
+    }
+  }
 }
 
 const queryClient = new QueryClient()

@@ -17,6 +17,15 @@ import {
 } from "@/client/@tanstack/react-query.gen"
 import { EditItem } from "./edit-data"
 import { toast } from "sonner"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 // 状态Badge 组件
 function StatusBadge({ status }: { status: StatusEnum }) {

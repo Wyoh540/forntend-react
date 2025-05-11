@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, useMatches } from "@tanstack/react-router"
 import { Outlet, redirect } from "@tanstack/react-router"
 import { AppSidebar } from "@/components/app-sidebar"
 import {
@@ -29,6 +29,13 @@ export const Route = createFileRoute("/_layout")({
 })
 
 function Layout() {
+  const matches = useMatches()
+  const breadcrumbs = matches
+    .filter((match) => match.staticData.breadcrumb?.display === true) // 过滤需要显示的节点
+    .map((match) => ({
+      title: match.staticData.breadcrumb?.title,
+      path: match.pathname,
+    }))
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -39,19 +46,14 @@ function Layout() {
             orientation="vertical"
             className="mr-2 data-[orientation=vertical]:h-4"
           />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="#">
-                  Building Your Application
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          {breadcrumbs.map((crumb, index) => (
+            <BreadcrumbItem key={index}>
+              <BreadcrumbLink href={crumb.path}>{crumb.title}</BreadcrumbLink>
+              {index < breadcrumbs.length - 1 && (
+                <BreadcrumbSeparator className="hidden md:block" />
+              )}
+            </BreadcrumbItem>
+          ))}
         </header>
         <div className="flex flex-col gap-2 p-2">
           <Outlet />

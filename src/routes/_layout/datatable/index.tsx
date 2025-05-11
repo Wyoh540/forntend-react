@@ -10,6 +10,12 @@ import { AddItem } from "./-components/add-data"
 
 export const Route = createFileRoute("/_layout/datatable/")({
   component: RouteComponent,
+  staticData: {
+    breadcrumb: {
+      title: "数据表", // 面包屑显示的文本
+      display: true, // 控制是否显示在面包屑中
+    },
+  },
 })
 
 function RouteComponent() {
