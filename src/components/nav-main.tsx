@@ -1,4 +1,4 @@
-import { ChevronRight, MoreHorizontal, type LucideIcon } from "lucide-react"
+import { ChevronRight, type LucideIcon } from "lucide-react"
 
 import {
   SidebarGroup,
@@ -14,20 +14,15 @@ import {
 } from "@/components/ui/collapsible"
 import { Link } from "@tanstack/react-router"
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string
-    url: string
-    icon?: LucideIcon
-    isActive?: boolean
-    children?: {
-      title: string
-      url: string
-    }[]
-  }[]
-}) {
+export interface itemsType {
+  title: string
+  url: string
+  icon?: LucideIcon
+  isActive?: boolean
+  children?: itemsType[]
+}
+
+export function NavMain({ items }: { items: itemsType[] | itemsType }) {
   const itemsArrary = Array.isArray(items) ? items : [items]
   return (
     <SidebarGroup>
