@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table"
-import { type ItemPublic, type StatusEnum } from "@/client"
+import { type ItemPublic, type ItemStatus } from "@/client"
 import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
@@ -17,19 +17,10 @@ import {
 } from "@/client/@tanstack/react-query.gen"
 import { EditItem } from "./edit-data"
 import { toast } from "sonner"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 
 // 状态Badge 组件
-function StatusBadge({ status }: { status: StatusEnum }) {
-  const statusMap: Record<StatusEnum, { label: string; className: string }> = {
+function StatusBadge({ status }: { status: ItemStatus }) {
+  const statusMap: Record<ItemStatus, { label: string; className: string }> = {
     1: {
       label: "在线",
       className: "bg-green-100 text-green-800",

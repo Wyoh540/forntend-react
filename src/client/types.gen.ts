@@ -48,7 +48,7 @@ export type ItemCreate = {
     /**
      * 1: 在线, 2: 离线
      */
-    status?: StatusEnum;
+    status?: ItemStatus;
     tags?: Array<string>;
 };
 
@@ -57,19 +57,27 @@ export type ItemPublic = {
     /**
      * 1: 在线, 2: 离线
      */
-    status?: StatusEnum;
+    status?: ItemStatus;
     id: number;
     owner: UserPubic;
     tags: Array<TagName>;
 };
 
+/**
+ * 状态，1: 在线, 2: 离线
+ */
+export enum ItemStatus {
+    _1 = 1,
+    _2 = 2
+}
+
 export type ItemUpdate = {
     title?: string | null;
+    tags?: Array<string>;
     /**
      * 1: 在线, 2: 离线
      */
-    status?: StatusEnum;
-    tags?: Array<string>;
+    status?: ItemStatus;
 };
 
 export type PageItemPublic = {
@@ -80,13 +88,13 @@ export type PageItemPublic = {
     pages?: number | null;
 };
 
-/**
- * 状态，1: 在线, 2: 离线
- */
-export enum StatusEnum {
-    _1 = 1,
-    _2 = 2
-}
+export type PageUploadFile = {
+    items: Array<UploadFile>;
+    total: number | null;
+    page: number | null;
+    size: number | null;
+    pages?: number | null;
+};
 
 /**
  * 标签表
@@ -107,9 +115,23 @@ export type Token = {
  * UploadFile响应模型
  */
 export type UploadFile = {
-    file_name: string | null;
-    file_size: number | null;
-    content_type: string | null;
+    /**
+     * 文件名称
+     */
+    filename: string;
+    /**
+     * 文件路径
+     */
+    filepath?: string;
+    /**
+     * 文件大小，单位为字节
+     */
+    file_size: number;
+    /**
+     * 文件内容类型
+     */
+    content_type: string;
+    id: string;
 };
 
 export type UserCreate = {
@@ -231,7 +253,7 @@ export type GetItemsData = {
         /**
          * 1: 在线， 2: 离线
          */
-        status?: StatusEnum | null;
+        status?: ItemStatus | null;
         title__like?: string | null;
         /**
          * Page number
@@ -383,6 +405,40 @@ export type CreateFileResponses = {
 
 export type CreateFileResponse = CreateFileResponses[keyof CreateFileResponses];
 
+export type GetUploadFilesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page number
+         */
+        page?: number;
+        /**
+         * Page size
+         */
+        size?: number;
+    };
+    url: '/api/v1/upload-file/';
+};
+
+export type GetUploadFilesErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetUploadFilesError = GetUploadFilesErrors[keyof GetUploadFilesErrors];
+
+export type GetUploadFilesResponses = {
+    /**
+     * Successful Response
+     */
+    200: PageUploadFile;
+};
+
+export type GetUploadFilesResponse = GetUploadFilesResponses[keyof GetUploadFilesResponses];
+
 export type CreateUploadFileData = {
     body: BodyCreateUploadFile;
     path?: never;
@@ -407,6 +463,31 @@ export type CreateUploadFileResponses = {
 };
 
 export type CreateUploadFileResponse = CreateUploadFileResponses[keyof CreateUploadFileResponses];
+
+export type DownloadFileData = {
+    body?: never;
+    path: {
+        file_id: string;
+    };
+    query?: never;
+    url: '/api/v1/upload-file/{file_id}';
+};
+
+export type DownloadFileErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type DownloadFileError = DownloadFileErrors[keyof DownloadFileErrors];
+
+export type DownloadFileResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type CreateFileWithFormData = {
     body: BodyCreateFileWithForm;

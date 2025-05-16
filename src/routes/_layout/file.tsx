@@ -1,9 +1,15 @@
 import {
   createFile,
   createFileWithForm,
+  downloadFile,
   type BodyCreateFileWithForm,
+  type UploadFile,
 } from "@/client"
-import { createFileWithFormMutation } from "@/client/@tanstack/react-query.gen"
+import {
+  createFileWithFormMutation,
+  getUploadFilesOptions,
+} from "@/client/@tanstack/react-query.gen"
+import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -34,7 +40,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
+import type { ColumnDef } from "@tanstack/react-table"
 import { CloudUpload, Upload, X } from "lucide-react"
 import { useCallback, useState } from "react"
 import { useForm, type SubmitHandler } from "react-hook-form"
@@ -317,7 +325,82 @@ function FileUploadWithForm() {
   )
 }
 
+const columns: ColumnDef<UploadFile>[] = [
+  {
+    accessorKey: "id",
+    header: "ID",
+  },
+  {
+    accessorKey: "filename",
+    header: "文件名称",
+  },
+  {
+    accessorKey: "filepath",
+    header: "文件路径",
+  },
+  {
+    accessorKey: "file_size",
+    header: "文件大小",
+  },
+  {
+    accessorKey: "content_type",
+    header: "文件类型",
+  },
+  {
+    header: "操作",
+    cell: ({ row }) => {
+      const file = row.original
+
+      return (
+        <div>
+          <Button
+            onClick={async () => {
+              try {
+                // 调用 downloadFile 方法获取文件的 Blob 对象
+                const response = await downloadFile({
+                  path: {
+                    file_id: file.id,
+                  },
+                  responseType: "blob",
+                })
+                console.log(response)
+                // 检查响应是否包含 Blob 对象
+                if (response && response.data instanceof Blob) {
+                  // 创建一个临时的 URL 指向 Blob 对象
+                  const url = window.URL.createObjectURL(response.data)
+                  // 创建一个 a 标签
+                  const a = document.createElement("a")
+                  a.href = url
+                  // 设置下载的文件名，这里假设文件名可以从 file 对象获取
+                  a.download = file.filename
+                  // 将 a 标签添加到文档中
+                  document.body.appendChild(a)
+                  // 模拟点击 a 标签触发下载
+                  a.click()
+                  // 移除 a 标签
+                  document.body.removeChild(a)
+                  // 释放临时 URL
+                  window.URL.revokeObjectURL(url)
+                }
+              } catch (error) {
+                console.error("文件下载失败", error)
+              }
+            }}
+          >
+            下载
+          </Button>
+        </div>
+      )
+    },
+  },
+]
+
 function RouteComponent() {
+  const { data, isPending } = useQuery({
+    ...getUploadFilesOptions(),
+    placeholderData: keepPreviousData,
+  })
+
   return (
     <div className="grid grid-cols-2 gap-4">
       <Card>
@@ -336,6 +419,19 @@ function RouteComponent() {
         </CardHeader>
         <CardContent>
           <FileUploadWithForm />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>文件列表</CardTitle>
+          <CardDescription>已上传文件列表</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DataTable
+            data={data?.items || []}
+            columns={columns}
+            isPending={isPending}
+          />
         </CardContent>
       </Card>
     </div>
