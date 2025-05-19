@@ -10,6 +10,7 @@ import {
   getUploadFilesOptions,
 } from "@/client/@tanstack/react-query.gen"
 import { DataTable } from "@/components/data-table"
+import { DataTablePagination } from "@/components/data-table-pagination"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -18,6 +19,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import {
   FileUpload,
   FileUploadDropzone,
@@ -352,7 +360,7 @@ const columns: ColumnDef<UploadFile>[] = [
       const file = row.original
 
       return (
-        <div>
+        <div className="flex flex-row gap-2">
           <Button
             onClick={async () => {
               try {
@@ -389,6 +397,7 @@ const columns: ColumnDef<UploadFile>[] = [
           >
             下载
           </Button>
+          <Button variant="destructive">删除</Button>
         </div>
       )
     },
@@ -396,6 +405,9 @@ const columns: ColumnDef<UploadFile>[] = [
 ]
 
 function RouteComponent() {
+  const [page, setPage] = useState(1)
+  const [size, setSize] = useState(10)
+
   const { data, isPending } = useQuery({
     ...getUploadFilesOptions(),
     placeholderData: keepPreviousData,
@@ -403,34 +415,50 @@ function RouteComponent() {
 
   return (
     <div className="grid grid-cols-2 gap-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>直接上传</CardTitle>
-          <CardDescription>You have 3 unread messages.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <FileUploadDirectUploadDemo />
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>表单上传</CardTitle>
-          <CardDescription>You have 3 unread messages.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <FileUploadWithForm />
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
+      <div className="col-span-2 flex flex-row gap-2">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="default">直接上传</Button>
+          </DialogTrigger>
+          <DialogContent aria-describedby={undefined}>
+            <DialogHeader>
+              <DialogTitle>文件上传</DialogTitle>
+            </DialogHeader>
+            <FileUploadDirectUploadDemo />
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="default">表单上传</Button>
+          </DialogTrigger>
+          <DialogContent aria-describedby={undefined}>
+            <DialogHeader>
+              <DialogTitle>文件上传</DialogTitle>
+            </DialogHeader>
+            <FileUploadWithForm />
+          </DialogContent>
+        </Dialog>
+      </div>
+      <Card className="col-span-2">
+        {/* <CardHeader>
           <CardTitle>文件列表</CardTitle>
           <CardDescription>已上传文件列表</CardDescription>
-        </CardHeader>
-        <CardContent>
+        </CardHeader> */}
+        <CardContent className="flex flex-col gap-2">
           <DataTable
             data={data?.items || []}
             columns={columns}
             isPending={isPending}
+          />
+          <DataTablePagination
+            page={page}
+            pageSize={size}
+            total={data?.total || 0}
+            pages={data?.pages || 0}
+            onChange={(page, pageSize) => {
+              setPage(page)
+              setSize(pageSize)
+            }}
           />
         </CardContent>
       </Card>
