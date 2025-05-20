@@ -1,24 +1,19 @@
 import {
   createFile,
   createFileWithForm,
+  createUploadFile,
   downloadFile,
-  type BodyCreateFileWithForm,
   type UploadFile,
 } from "@/client"
 import {
-  createFileWithFormMutation,
+  deleteFileMutation,
   getUploadFilesOptions,
+  getUploadFilesQueryKey,
 } from "@/client/@tanstack/react-query.gen"
 import { DataTable } from "@/components/data-table"
 import { DataTablePagination } from "@/components/data-table-pagination"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -48,10 +43,15 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { keepPreviousData, useQuery } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import type { ColumnDef } from "@tanstack/react-table"
-import { CloudUpload, Upload, X } from "lucide-react"
+import { Upload, X } from "lucide-react"
 import { useCallback, useState } from "react"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
@@ -70,6 +70,8 @@ export const Route = createFileRoute("/_layout/file")({
 // 文件直接上传
 function FileUploadDirectUploadDemo() {
   const [files, setFiles] = useState<File[]>([])
+  const queryclient = useQueryClient()
+
   const onUpload = useCallback(
     async (
       files: File[],
@@ -93,13 +95,17 @@ function FileUploadDirectUploadDemo() {
               onProgress(file, progress)
             }
 
-            await createFile({
+            await createUploadFile({
               body: {
                 file: file,
               },
               headers: {
                 "Content-Type": "multipart/form-data",
               },
+            }).then(() => {
+              queryclient.invalidateQueries({
+                queryKey: getUploadFilesQueryKey(),
+              })
             })
             onSuccess(file)
           } catch (error) {
@@ -359,6 +365,21 @@ const columns: ColumnDef<UploadFile>[] = [
     cell: ({ row }) => {
       const file = row.original
 
+      const queryclient = useQueryClient()
+      const mutation = useMutation({
+        ...deleteFileMutation(),
+        onSuccess: () => {
+          toast.success("文件删除成功")
+        },
+        onError: (error) => {
+          toast.error("文件删除失败")
+          console.error(error)
+        },
+        onSettled: () => {
+          queryclient.invalidateQueries({ queryKey: getUploadFilesQueryKey() })
+        },
+      })
+
       return (
         <div className="flex flex-row gap-2">
           <Button
@@ -397,7 +418,14 @@ const columns: ColumnDef<UploadFile>[] = [
           >
             下载
           </Button>
-          <Button variant="destructive">删除</Button>
+          <Button
+            variant="destructive"
+            onClick={async () => {
+              await mutation.mutateAsync({ path: { file_id: file.id } })
+            }}
+          >
+            删除
+          </Button>
         </div>
       )
     },

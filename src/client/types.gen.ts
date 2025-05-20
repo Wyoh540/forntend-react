@@ -464,6 +464,31 @@ export type CreateUploadFileResponses = {
 
 export type CreateUploadFileResponse = CreateUploadFileResponses[keyof CreateUploadFileResponses];
 
+export type DeleteFileData = {
+    body?: never;
+    path: {
+        file_id: string;
+    };
+    query?: never;
+    url: '/api/v1/upload-file/{file_id}';
+};
+
+export type DeleteFileErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type DeleteFileError = DeleteFileErrors[keyof DeleteFileErrors];
+
+export type DeleteFileResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
 export type DownloadFileData = {
     body?: never;
     path: {
