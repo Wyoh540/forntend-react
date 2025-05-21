@@ -30,6 +30,10 @@ export const data: sidebarDataType = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
+      title: "首页",
+      url: "/",
+    },
+    {
       title: "Getting Started",
       url: "#",
       isActive: true,
@@ -48,6 +52,16 @@ export const data: sidebarDataType = {
           title: "关于",
           icon: BadgeAlert,
           url: "/about",
+        },
+      ],
+    },
+    {
+      title: "组件",
+      url: "#",
+      children: [
+        {
+          title: "代码编辑器",
+          url: "/components/code-edit",
         },
       ],
     },

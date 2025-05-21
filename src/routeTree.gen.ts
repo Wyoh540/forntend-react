@@ -17,6 +17,7 @@ import { Route as LayoutIndexImport } from './routes/_layout/index'
 import { Route as LayoutFileImport } from './routes/_layout/file'
 import { Route as LayoutAboutImport } from './routes/_layout/about'
 import { Route as LayoutDatatableIndexImport } from './routes/_layout/datatable/index'
+import { Route as LayoutComponentsCodeEditImport } from './routes/_layout/components/code-edit'
 
 // Create/Update Routes
 
@@ -52,6 +53,12 @@ const LayoutAboutRoute = LayoutAboutImport.update({
 const LayoutDatatableIndexRoute = LayoutDatatableIndexImport.update({
   id: '/datatable/',
   path: '/datatable/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutComponentsCodeEditRoute = LayoutComponentsCodeEditImport.update({
+  id: '/components/code-edit',
+  path: '/components/code-edit',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -94,6 +101,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/components/code-edit': {
+      id: '/_layout/components/code-edit'
+      path: '/components/code-edit'
+      fullPath: '/components/code-edit'
+      preLoaderRoute: typeof LayoutComponentsCodeEditImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/datatable/': {
       id: '/_layout/datatable/'
       path: '/datatable'
@@ -110,6 +124,7 @@ interface LayoutRouteChildren {
   LayoutAboutRoute: typeof LayoutAboutRoute
   LayoutFileRoute: typeof LayoutFileRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutComponentsCodeEditRoute: typeof LayoutComponentsCodeEditRoute
   LayoutDatatableIndexRoute: typeof LayoutDatatableIndexRoute
 }
 
@@ -117,6 +132,7 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAboutRoute: LayoutAboutRoute,
   LayoutFileRoute: LayoutFileRoute,
   LayoutIndexRoute: LayoutIndexRoute,
+  LayoutComponentsCodeEditRoute: LayoutComponentsCodeEditRoute,
   LayoutDatatableIndexRoute: LayoutDatatableIndexRoute,
 }
 
@@ -129,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof LayoutAboutRoute
   '/file': typeof LayoutFileRoute
   '/': typeof LayoutIndexRoute
+  '/components/code-edit': typeof LayoutComponentsCodeEditRoute
   '/datatable': typeof LayoutDatatableIndexRoute
 }
 
@@ -137,6 +154,7 @@ export interface FileRoutesByTo {
   '/about': typeof LayoutAboutRoute
   '/file': typeof LayoutFileRoute
   '/': typeof LayoutIndexRoute
+  '/components/code-edit': typeof LayoutComponentsCodeEditRoute
   '/datatable': typeof LayoutDatatableIndexRoute
 }
 
@@ -147,14 +165,28 @@ export interface FileRoutesById {
   '/_layout/about': typeof LayoutAboutRoute
   '/_layout/file': typeof LayoutFileRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/components/code-edit': typeof LayoutComponentsCodeEditRoute
   '/_layout/datatable/': typeof LayoutDatatableIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/login' | '/about' | '/file' | '/' | '/datatable'
+  fullPaths:
+    | ''
+    | '/login'
+    | '/about'
+    | '/file'
+    | '/'
+    | '/components/code-edit'
+    | '/datatable'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/about' | '/file' | '/' | '/datatable'
+  to:
+    | '/login'
+    | '/about'
+    | '/file'
+    | '/'
+    | '/components/code-edit'
+    | '/datatable'
   id:
     | '__root__'
     | '/_layout'
@@ -162,6 +194,7 @@ export interface FileRouteTypes {
     | '/_layout/about'
     | '/_layout/file'
     | '/_layout/'
+    | '/_layout/components/code-edit'
     | '/_layout/datatable/'
   fileRoutesById: FileRoutesById
 }
@@ -196,6 +229,7 @@ export const routeTree = rootRoute
         "/_layout/about",
         "/_layout/file",
         "/_layout/",
+        "/_layout/components/code-edit",
         "/_layout/datatable/"
       ]
     },
@@ -212,6 +246,10 @@ export const routeTree = rootRoute
     },
     "/_layout/": {
       "filePath": "_layout/index.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/components/code-edit": {
+      "filePath": "_layout/components/code-edit.tsx",
       "parent": "/_layout"
     },
     "/_layout/datatable/": {
