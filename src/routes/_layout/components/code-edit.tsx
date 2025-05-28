@@ -1,7 +1,7 @@
 import * as monaco from "monaco-editor"
 import { MonacoEditor } from "@/components/monaco-editor"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+
 import {
   Select,
   SelectContent,
@@ -10,8 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { createFileRoute } from "@tanstack/react-router"
-import { useEffect, useRef, useState } from "react"
-import type { Monaco } from "@monaco-editor/react"
+import { useRef, useState } from "react"
 import { Label } from "@/components/ui/label"
 
 export const Route = createFileRoute("/_layout/components/code-edit")({

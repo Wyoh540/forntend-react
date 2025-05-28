@@ -1,6 +1,9 @@
 import Editor, { type Monaco } from "@monaco-editor/react"
 import * as monaco from "monaco-editor"
+import { loader } from "@monaco-editor/react"
 import { useEffect, useRef } from "react"
+
+loader.config({ monaco })
 
 interface MonacoEditorProps {
   value?: string
