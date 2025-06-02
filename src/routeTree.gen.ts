@@ -18,6 +18,7 @@ import { Route as LayoutFileImport } from './routes/_layout/file'
 import { Route as LayoutAboutImport } from './routes/_layout/about'
 import { Route as LayoutDatatableIndexImport } from './routes/_layout/datatable/index'
 import { Route as LayoutComponentsCodeEditImport } from './routes/_layout/components/code-edit'
+import { Route as LayoutComponentsChartsImport } from './routes/_layout/components/charts'
 
 // Create/Update Routes
 
@@ -62,6 +63,12 @@ const LayoutComponentsCodeEditRoute = LayoutComponentsCodeEditImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
+const LayoutComponentsChartsRoute = LayoutComponentsChartsImport.update({
+  id: '/components/charts',
+  path: '/components/charts',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -101,6 +108,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/components/charts': {
+      id: '/_layout/components/charts'
+      path: '/components/charts'
+      fullPath: '/components/charts'
+      preLoaderRoute: typeof LayoutComponentsChartsImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/components/code-edit': {
       id: '/_layout/components/code-edit'
       path: '/components/code-edit'
@@ -124,6 +138,7 @@ interface LayoutRouteChildren {
   LayoutAboutRoute: typeof LayoutAboutRoute
   LayoutFileRoute: typeof LayoutFileRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutComponentsChartsRoute: typeof LayoutComponentsChartsRoute
   LayoutComponentsCodeEditRoute: typeof LayoutComponentsCodeEditRoute
   LayoutDatatableIndexRoute: typeof LayoutDatatableIndexRoute
 }
@@ -132,6 +147,7 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAboutRoute: LayoutAboutRoute,
   LayoutFileRoute: LayoutFileRoute,
   LayoutIndexRoute: LayoutIndexRoute,
+  LayoutComponentsChartsRoute: LayoutComponentsChartsRoute,
   LayoutComponentsCodeEditRoute: LayoutComponentsCodeEditRoute,
   LayoutDatatableIndexRoute: LayoutDatatableIndexRoute,
 }
@@ -145,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof LayoutAboutRoute
   '/file': typeof LayoutFileRoute
   '/': typeof LayoutIndexRoute
+  '/components/charts': typeof LayoutComponentsChartsRoute
   '/components/code-edit': typeof LayoutComponentsCodeEditRoute
   '/datatable': typeof LayoutDatatableIndexRoute
 }
@@ -154,6 +171,7 @@ export interface FileRoutesByTo {
   '/about': typeof LayoutAboutRoute
   '/file': typeof LayoutFileRoute
   '/': typeof LayoutIndexRoute
+  '/components/charts': typeof LayoutComponentsChartsRoute
   '/components/code-edit': typeof LayoutComponentsCodeEditRoute
   '/datatable': typeof LayoutDatatableIndexRoute
 }
@@ -165,6 +183,7 @@ export interface FileRoutesById {
   '/_layout/about': typeof LayoutAboutRoute
   '/_layout/file': typeof LayoutFileRoute
   '/_layout/': typeof LayoutIndexRoute
+  '/_layout/components/charts': typeof LayoutComponentsChartsRoute
   '/_layout/components/code-edit': typeof LayoutComponentsCodeEditRoute
   '/_layout/datatable/': typeof LayoutDatatableIndexRoute
 }
@@ -177,6 +196,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/file'
     | '/'
+    | '/components/charts'
     | '/components/code-edit'
     | '/datatable'
   fileRoutesByTo: FileRoutesByTo
@@ -185,6 +205,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/file'
     | '/'
+    | '/components/charts'
     | '/components/code-edit'
     | '/datatable'
   id:
@@ -194,6 +215,7 @@ export interface FileRouteTypes {
     | '/_layout/about'
     | '/_layout/file'
     | '/_layout/'
+    | '/_layout/components/charts'
     | '/_layout/components/code-edit'
     | '/_layout/datatable/'
   fileRoutesById: FileRoutesById
@@ -229,6 +251,7 @@ export const routeTree = rootRoute
         "/_layout/about",
         "/_layout/file",
         "/_layout/",
+        "/_layout/components/charts",
         "/_layout/components/code-edit",
         "/_layout/datatable/"
       ]
@@ -246,6 +269,10 @@ export const routeTree = rootRoute
     },
     "/_layout/": {
       "filePath": "_layout/index.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/components/charts": {
+      "filePath": "_layout/components/charts.tsx",
       "parent": "/_layout"
     },
     "/_layout/components/code-edit": {

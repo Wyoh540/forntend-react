@@ -1,6 +1,5 @@
 import * as React from "react"
 
-import { SearchForm } from "@/components/search-form"
 import { VersionSwitcher } from "@/components/version-switcher"
 
 import {
@@ -13,7 +12,16 @@ import {
 import { NavUser } from "@/components/nav-user"
 import useAuth from "@/hooks/use-auth"
 import { NavMain, type itemsType } from "@/components/nav-main"
-import { SquareTerminal, File, BadgeAlert } from "lucide-react"
+import {
+  SquareTerminal,
+  File,
+  BadgeAlert,
+  ChartColumnBig,
+  Code,
+  Component,
+  House,
+  Rocket,
+} from "lucide-react"
 
 interface sidebarDataType {
   versions: string[]
@@ -31,11 +39,13 @@ export const data: sidebarDataType = {
   navMain: [
     {
       title: "首页",
+      icon: House,
       url: "/",
     },
     {
       title: "Getting Started",
       url: "#",
+      icon: Rocket,
       isActive: true,
       children: [
         {
@@ -57,11 +67,18 @@ export const data: sidebarDataType = {
     },
     {
       title: "组件",
+      icon: Component,
       url: "#",
       children: [
         {
           title: "代码编辑器",
+          icon: Code,
           url: "/components/code-edit",
+        },
+        {
+          title: "图表",
+          icon: ChartColumnBig,
+          url: "/components/charts",
         },
       ],
     },
@@ -77,13 +94,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user: currentUser } = useAuth()
 
   return (
-    <Sidebar {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <VersionSwitcher
           versions={data.versions}
           defaultVersion={data.versions[0]}
         />
-        <SearchForm />
+        {/* <SearchForm /> */}
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
