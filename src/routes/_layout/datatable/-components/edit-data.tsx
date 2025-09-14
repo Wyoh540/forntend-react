@@ -40,6 +40,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 
 function TagSelect({
   field,
@@ -150,6 +151,22 @@ export function EditItem({ item }: { item: ItemPublic }) {
                       <SelectItem value="2">离线</SelectItem>
                     </SelectContent>
                   </Select>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>描述</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="description"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />

@@ -28,20 +28,31 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     columns,
     data,
+    initialState: {
+      columnPinning: { right: ["actions"] },
+    },
     getCoreRowModel: getCoreRowModel(),
   })
 
   return (
     <div className="space-y-4">
       {/* <DataTableToolbar table={table} /> */}
-      <div className="rounded-md border">
+      <div className="w-full overflow-x-auto rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className={
+                        header.column.getIsPinned() === "right"
+                          ? "bg-background sticky right-0 z-10"
+                          : "bg-background"
+                      }
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -72,14 +83,23 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        className={
+                          cell.column.getIsPinned() === "right"
+                            ? "bg-background sticky right-0 z-10"
+                            : "bg-background"
+                        }
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    )
+                  })}
                 </TableRow>
               ))
             ) : (

@@ -43,6 +43,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 
 // Tag选择框
 function TagSelect({
@@ -98,7 +99,7 @@ export function AddItem() {
     onSettled: () => {
       // 执行完回调，使 items 数据无效，重新拉取
       queryClient.invalidateQueries({
-        queryKey: getItemsQueryKey({ query: { status: 1 } }),
+        queryKey: getItemsQueryKey(),
       })
     },
   })
@@ -158,6 +159,22 @@ export function AddItem() {
                         <SelectItem value="2">离线</SelectItem>
                       </SelectContent>
                     </Select>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>描述</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="description"
+                        {...field}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
                   </FormItem>
                 )}
               />

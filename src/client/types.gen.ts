@@ -14,6 +14,15 @@ export type BodyCreateUploadFile = {
     file: Blob | File;
 };
 
+export type BodyGithubCallback = {
+    code: string;
+    redirect_uri: string;
+};
+
+export type BodyGithubLogin = {
+    redirect_uri: string;
+};
+
 export type BodyLoginAccessToken = {
     grant_type?: string | null;
     username: string;
@@ -45,21 +54,16 @@ export type HttpValidationError = {
 
 export type ItemCreate = {
     title: string;
-    /**
-     * 1: 在线, 2: 离线
-     */
-    status?: ItemStatus;
     tags?: Array<string>;
+    description?: string | null;
 };
 
 export type ItemPublic = {
-    title: string;
-    /**
-     * 1: 在线, 2: 离线
-     */
-    status?: ItemStatus;
     id: number;
-    owner: UserPubic;
+    title: string;
+    status: ItemStatus;
+    description?: string | null;
+    owner: UserPublic;
     tags: Array<TagName>;
 };
 
@@ -74,10 +78,15 @@ export enum ItemStatus {
 export type ItemUpdate = {
     title?: string | null;
     tags?: Array<string>;
+    description?: string | null;
     /**
      * 1: 在线, 2: 离线
      */
     status?: ItemStatus;
+};
+
+export type NewPassword = {
+    new_password: string;
 };
 
 export type PageItemPublic = {
@@ -135,23 +144,37 @@ export type UploadFile = {
 };
 
 export type UserCreate = {
-    email: string;
+    email?: string | null;
+    nickname?: string | null;
+    avatar?: string | null;
     is_active?: boolean;
     is_superuser?: boolean;
-    full_name?: string | null;
-    password: string;
+    password?: string | null;
+    auth_type?: string;
+    identifier?: string | null;
+    credential?: string | null;
 };
 
-export type UserPubic = {
+export type UserPublic = {
     id?: number | null;
     email?: string | null;
+    nickname?: string | null;
+    avatar?: string | null;
     is_active?: boolean;
     is_superuser?: boolean;
-    full_name?: string | null;
+};
+
+export type UserUpdate = {
+    email?: string | null;
+    nickname?: string | null;
+    avatar?: string | null;
+    is_active?: boolean | null;
+    is_superuser?: boolean | null;
+    password?: string | null;
 };
 
 export type UsersPublic = {
-    data: Array<UserPubic>;
+    data: Array<UserPublic>;
 };
 
 export type ValidationError = {
@@ -184,6 +207,52 @@ export type LoginAccessTokenResponses = {
 };
 
 export type LoginAccessTokenResponse = LoginAccessTokenResponses[keyof LoginAccessTokenResponses];
+
+export type GithubLoginData = {
+    body: BodyGithubLogin;
+    path?: never;
+    query?: never;
+    url: '/api/v1/login/github-login';
+};
+
+export type GithubLoginErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GithubLoginError = GithubLoginErrors[keyof GithubLoginErrors];
+
+export type GithubLoginResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type GithubCallbackData = {
+    body: BodyGithubCallback;
+    path?: never;
+    query?: never;
+    url: '/api/v1/login/github/callback';
+};
+
+export type GithubCallbackErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GithubCallbackError = GithubCallbackErrors[keyof GithubCallbackErrors];
+
+export type GithubCallbackResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
 
 export type GetUsersData = {
     body?: never;
@@ -221,10 +290,64 @@ export type CreateUserResponses = {
     /**
      * Successful Response
      */
-    200: UserPubic;
+    200: UserPublic;
 };
 
 export type CreateUserResponse = CreateUserResponses[keyof CreateUserResponses];
+
+export type DeleteUserData = {
+    body?: never;
+    path: {
+        user_id: number;
+    };
+    query?: never;
+    url: '/api/v1/users/{user_id}';
+};
+
+export type DeleteUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type DeleteUserError = DeleteUserErrors[keyof DeleteUserErrors];
+
+export type DeleteUserResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type DeleteUserResponse = DeleteUserResponses[keyof DeleteUserResponses];
+
+export type UpdateUserData = {
+    body: UserUpdate;
+    path: {
+        user_id: number;
+    };
+    query?: never;
+    url: '/api/v1/users/{user_id}';
+};
+
+export type UpdateUserErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type UpdateUserError = UpdateUserErrors[keyof UpdateUserErrors];
+
+export type UpdateUserResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserPublic;
+};
+
+export type UpdateUserResponse = UpdateUserResponses[keyof UpdateUserResponses];
 
 export type GetUserMeData = {
     body?: never;
@@ -237,10 +360,35 @@ export type GetUserMeResponses = {
     /**
      * Successful Response
      */
-    200: UserPubic;
+    200: UserPublic;
 };
 
 export type GetUserMeResponse = GetUserMeResponses[keyof GetUserMeResponses];
+
+export type ResetMePasswordData = {
+    body: NewPassword;
+    path?: never;
+    query?: never;
+    url: '/api/v1/users/me/password';
+};
+
+export type ResetMePasswordErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ResetMePasswordError = ResetMePasswordErrors[keyof ResetMePasswordErrors];
+
+export type ResetMePasswordResponses = {
+    /**
+     * Successful Response
+     */
+    200: UserPublic;
+};
+
+export type ResetMePasswordResponse = ResetMePasswordResponses[keyof ResetMePasswordResponses];
 
 export type GetItemsData = {
     body?: never;

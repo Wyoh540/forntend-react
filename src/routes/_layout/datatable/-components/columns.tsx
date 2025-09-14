@@ -54,6 +54,10 @@ export const columns: ColumnDef<ItemPublic>[] = [
     },
   },
   {
+    accessorKey: "description",
+    header: "描述",
+  },
+  {
     accessorKey: "tags",
     header: "Tags",
     cell: ({ row }) => {
@@ -68,12 +72,14 @@ export const columns: ColumnDef<ItemPublic>[] = [
     },
   },
   {
-    accessorKey: "owner.full_name",
+    accessorKey: "owner.nickname",
     header: "Owner",
+    id: "owner",
   },
   {
     id: "actions",
     header: "Actions",
+    enablePinning: true,
     enableHiding: false,
     cell: ({ row }) => {
       const item = row.original
